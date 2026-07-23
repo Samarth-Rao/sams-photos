@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — "chemical, not nostalgic"
+   The palette is drawn from instant-film chemistry rather than from memory:
+   cool paper white, cool near-black ink, one saturated reagent blue.
+   Deliberately NOT warm cream — this is the whole point of the direction.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* Surfaces */
+  --color-paper: #eeefec; /* cool gray-white — the page, the print border */
+  --color-print: #ffffff; /* pure white — the polaroid frame, pops off paper */
+  --color-undeveloped: #d7ded4; /* pale film-green — the pre-develop state */
+
+  /* Ink */
+  --color-ink: #16181a; /* cool near-black — headings, body */
+  --color-graphite: #6e7377; /* secondary text, metadata */
+  --color-hairline: #d8dad6; /* rules and borders */
+
+  /* The single accent. Used sparingly: live indicators, focus, links. */
+  --color-reagent: #1f4fe0;
+
+  /* Type */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Motion */
+  --ease-develop: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Expanded width is the display voice — film-packaging signage.
+   Archivo is a variable font with a width axis, so this is a real axis
+   setting, not a synthetic stretch. */
+@utility display-expanded {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 118;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-graphite);
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 100;
+}
+
+/* Quality floor: focus is always visible, and it uses the accent. */
+:focus-visible {
+  outline: 2px solid var(--color-reagent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--color-reagent);
+  color: var(--color-print);
+}
+
+/* ---------------------------------------------------------------------------
+   Signature: the develop-in.
+   A real instant print emerges from flat pale green to full contrast over
+   ~2 minutes. Compressed here to ~2.2s. The image is always in the DOM at
+   full opacity — only filter and a faint wash animate — so the photo is
+   never hidden from anyone whose animations don't run.
+   --------------------------------------------------------------------------- */
+
+@keyframes develop {
+  0% {
+    filter: contrast(0.32) saturate(0.12) brightness(1.32) blur(6px);
+  }
+  55% {
+    filter: contrast(0.82) saturate(0.72) brightness(1.08) blur(1px);
+  }
+  100% {
+    filter: contrast(1) saturate(1) brightness(1) blur(0);
+  }
+}
+
+@keyframes develop-wash {
+  0% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.developing {
+  animation: develop 2200ms var(--ease-develop) both;
+}
+
+.developing-wash {
+  background: var(--color-undeveloped);
+  animation: develop-wash 2000ms var(--ease-develop) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .developing,
+  .developing-wash {
+    animation: none;
+  }
+  .developing-wash {
+    opacity: 0;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
