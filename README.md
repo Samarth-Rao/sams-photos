@@ -1,3 +1,5 @@
+#OUTDATED HAVE SINCE MOVED TO PIXIESET
+
 # sam's polaroids
 
 A daily photography practice. One photo a day, stored in object storage, shown as
