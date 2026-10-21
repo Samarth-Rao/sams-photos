@@ -91,7 +91,7 @@ reads photos through it, so adding accounts means writing a database-backed
 source and swapping the one line that picks the implementation — no page or
 component changes.
 
-The parts that would still need building: authentication, a per-user manifest key
-or table, and browser-side uploads via presigned URLs so nobody needs storage
-credentials on their machine (R2 and S3 both support these, unchanged). Streak logic in `computeStreak` is already pure and
+The parts that would still need building: per-user authentication (today's
+`/upload` uses a single shared password) and a per-user manifest key or table.
+Browser-side uploads via presigned URLs already exist (`/upload`). Streak logic in `computeStreak` is already pure and
 takes a photo list, so it works per-user unchanged.
